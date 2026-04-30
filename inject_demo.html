@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InjectAgentMessage Demo</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== Sidebar: controls ===== -->
+  <aside class="sidebar">
+    <h1>InjectAgentMessage<span>default vs queue</span></h1>
+
+    <div class="form-group">
+      <label>Microphone</label>
+      <select id="micSelect"><option value="">Loading…</option></select>
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="toggleAgent()">Start Voice Agent</button>
+
+    <button class="mic-btn" id="micBtn" onclick="toggleMic()" disabled>
+      <svg class="mic-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.92V21h2v-3.08A7 7 0 0019 11h-2z"/>
+      </svg>
+      <span id="micBtnLabel">Mute Mic</span>
+    </button>
+
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Not connected</span>
+    </div>
+
+    <div class="info-box">
+      <strong>Two automatic scenarios:</strong><br><br>
+      1. <strong>queue</strong> — ask <em>"Will it rain today?"</em>. The LLM speaks a preamble, the client fires the queue inject, and it appends seamlessly behind the preamble while the function loads.<br><br>
+      2. <strong>default</strong> — stay silent for <span id="idleSeconds">2</span>s after the agent finishes. The client fires the default inject (<em>"Are you still on the line?"</em>) — but if you start talking just as the timer fires, the server returns <code>InjectionRefused</code>.
+    </div>
+  </aside>
+
+  <!-- ===== Main: live session ===== -->
+  <section class="main-area">
+    <header class="main-header">
+      <h2>Live Session</h2>
+      <button class="clear-btn" onclick="clearAll()">Clear</button>
+    </header>
+
+    <div class="panels">
+      <div class="panel">
+        <div class="panel-header">Conversation</div>
+        <div class="panel-body" id="convo"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">Event Timeline</div>
+        <div class="panel-body" id="events"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="/static/inject_demo.js"></script>
+</body>
+</html>
